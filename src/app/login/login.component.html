@@ -1,17 +1,27 @@
 <p>
     {{user | json }} 
 </p>
-<form novalidate (ngSubmit)="onSubmit()">
+<form novalidate #loginForm="ngForm" (ngSubmit)="onSubmit()">
     <h2 mat-dialog-title>
         LOGIN
     </h2>
     <mat-dialog-content>
         <p>
             <mat-form-field>
-                <input matInput placeholder="Username" type="text" [(ngModel)]="user.username" name="name">
+                <input matInput placeholder="Username" type="text" [(ngModel)]="user.username" name="name" #username="ngModel" required minlength="4">
+                <mat-error *ngIf="username.errors?.required">
+                    user name is required</mat-error>
+                <mat-error *ngIf="username.errors?.minlength"
+                > min 4 characters required</mat-error>
             </mat-form-field>
             <mat-form-field>
-                <input matInput placeholder="Password" type="password" [(ngModel)]="user.password" name="password">
+                <input matInput placeholder="Password" type="password" [(ngModel)]="user.password" name="password" #password="ngModel" required minlength="3">
+                <mat-error *ngIf="password.errors?.required">
+                    password is required
+                </mat-error>
+                <mat-error *ngIf="password.errors?.minlength">
+                    password is too long
+                </mat-error>
             </mat-form-field>
             <mat-checkbox [(ngModel)]="user.remember" name="remember123">Remember Me</mat-checkbox>
         </p>
@@ -19,6 +29,6 @@
     <mat-dialog-actions>
         <span class="flex-spacer"></span>
         <button mat-button mat-dialog-close>Cancel</button>
-        <button type="submit" mat-raised-button color="primary">Login</button>
+        <button type="submit" mat-raised-button color="primary" [disabled]="loginForm.form.invalid">Login</button>
     </mat-dialog-actions>
 </form>
