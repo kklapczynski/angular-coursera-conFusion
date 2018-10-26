@@ -5,7 +5,11 @@
         <h2>Menu</h2>
         <hr>
     </div>
-    <div>
+    <div *ngIf="!dishes" class="div-center">
+        <h3>Please wait...</h3>
+        <mat-spinner></mat-spinner>
+    </div>
+    <div *ngIf="dishes">
         <mat-grid-list cols="2" rowHeight="200px" fxFlex>
             <mat-grid-tile *ngFor="let dish of dishes" [routerLink]="['/dishdetail', dish.id]">
             <!-- changing to use routerLink  (click)="onSelect(dish)"> -->
@@ -14,6 +18,7 @@
             </mat-grid-tile>
         </mat-grid-list>
     </div>
+
     <!-- <div> changing to use routerLink
         <app-dishdetail [dish]="selectedDish"></app-dishdetail>
     </div> -->

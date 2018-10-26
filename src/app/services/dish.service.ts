@@ -8,12 +8,27 @@ export class DishService {
 
   constructor() { }
   getDishes(): Promise<Dish[]> {
-    return Promise.resolve(DISHES);
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(DISHES);
+      }, 2000);
+    });
+    // return Promise.resolve(DISHES);
   }
   getDish(id: number): Promise<Dish> {
-      return Promise.resolve(DISHES.filter((dish) => (dish.id === id))[0]);
+      return new Promise((resolve, reject) => {
+        setTimeout( () => {
+          resolve(DISHES.filter((dish) => (dish.id === id))[0]);
+          // reject(`Problem with getting dish with id: ${id}`);
+        }, 2000);
+      })
+      // return Promise.resolve(DISHES.filter((dish) => (dish.id === id))[0]);
   }
   getFeaturedDish(): Promise<Dish> {
-      return Promise.resolve(DISHES.filter((dish) => (dish.featured))[0]);
+    return new Promise((resolve, reject) => {
+      setTimeout( () => {
+        resolve(DISHES.filter((dish) => (dish.featured))[0]);
+      }, 2000);
+    });
   }
 }

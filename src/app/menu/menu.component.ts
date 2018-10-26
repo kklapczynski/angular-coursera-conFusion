@@ -18,7 +18,7 @@ export class MenuComponent implements OnInit {
 
     ngOnInit() {
         this.dishService.getDishes()
-        .then(dishes => this.dishes = dishes);
+            .then(dishes => this.dishes = dishes);
     }
     // changing to routerLink
     // onSelect(dish: Dish) {
