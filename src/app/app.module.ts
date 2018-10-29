@@ -20,6 +20,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import 'hammerjs';
+import 'rxjs';
 
 import { AppComponent } from './app.component';
 import { MenuComponent } from './menu/menu.component';
