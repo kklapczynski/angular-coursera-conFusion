@@ -42,4 +42,7 @@ export class DishService {
     //   }, 2000);
     // });
   }
+  getDishIds(): Observable<number[]> {
+    return of(DISHES.map( dish => dish.id));
+  }
 }
