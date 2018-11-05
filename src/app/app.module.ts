@@ -18,6 +18,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSliderModule } from '@angular/material/slider';
 
 import 'hammerjs';
 import 'rxjs';
@@ -68,7 +69,8 @@ import { LeaderService } from './services/leader.service';
     MatCheckboxModule,
     MatSlideToggleModule,
     MatSelectModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSliderModule
   ],
   providers: [DishService, PromotionService, LeaderService],
   entryComponents: [LoginComponent],

@@ -4,6 +4,8 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
 import { Dish } from '../../shared/dish';
 import { switchMap } from 'rxjs/operators';
+import { FormBuilder, FormGroup } from '@angular/forms';
+
 
 
 @Component({
@@ -20,8 +22,10 @@ export class DishdetailComponent implements OnInit {
     dishIds: number[];
     prev: number;
     next: number;
+    commentForm: FormGroup;
 
-    constructor(private route: ActivatedRoute, private dishService: DishService, private location: Location) { }
+    constructor(private route: ActivatedRoute, private dishService: DishService, private location: Location,
+        private fb: FormBuilder) { }
 
     ngOnInit() {
         // getting all dish ids from observable
@@ -35,7 +39,18 @@ export class DishdetailComponent implements OnInit {
             // for version with Promise
             // .then(dish => this.dish = dish)
             // .catch(errorString => console.log(errorString));
+
+        this.createForm();
     }
+
+    createForm() {
+        this.commentForm = this.fb.group({
+            author: [''],
+            rating: [5],
+            comment: ['']
+        });
+    }
+
     goBack(): void {
         // TODO: change it, so BACK button brings back to MENU, not the preavious location
         this.location.back();
