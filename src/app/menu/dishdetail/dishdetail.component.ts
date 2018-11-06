@@ -4,7 +4,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
 import { Dish } from '../../shared/dish';
 import { switchMap } from 'rxjs/operators';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 
 
@@ -23,6 +23,22 @@ export class DishdetailComponent implements OnInit {
     prev: number;
     next: number;
     commentForm: FormGroup;
+
+    formErrors = {
+        'author': '',
+        'comment': ''
+    }
+
+    validationMessages = {
+        'author': {
+            'required': 'Your name is required. ',
+            'minlength': 'Your name should be min 2 characters long. '
+        },
+        'comment': {
+            'required': 'Comment is required. ',
+            'pattern': 'Space at start or end and double or more spaces not allowed. '
+        }
+    }
 
     constructor(private route: ActivatedRoute, private dishService: DishService, private location: Location,
         private fb: FormBuilder) { }
@@ -45,10 +61,33 @@ export class DishdetailComponent implements OnInit {
 
     createForm() {
         this.commentForm = this.fb.group({
-            author: [''],
+            author: ['',[Validators.required, Validators.minLength(2)]],
             rating: [5],
-            comment: ['']
+            comment: ['',[Validators.required, Validators.pattern('^\\S+(?: \\S+)*$')]]
+            // REGEX: no space at start or end or more then 1 space in a row ('\' before '\' so the final is: '^\S+(?: \S+)*$' )
         });
+
+        this.commentForm.valueChanges
+            .subscribe(formData => this.onValueChange(formData));
+    }
+
+    onValueChange(data?: any) {
+        console.log(`onValueChange: formData from valueChanges Observable: ${data}`);
+        console.log(data);
+        const form = this.commentForm;
+        for (const field in this.formErrors) {
+            this.formErrors[field] = '';
+            const control = form.get(field);
+            if (control && control.dirty) {
+                for (const error in control.errors) {
+                    this.formErrors[field] += this.validationMessages[field][error];
+                }
+            }
+            
+        }
+        console.log(`formErrors:`);
+        console.log(this.formErrors);
+        console.log(this.commentForm);
     }
 
     goBack(): void {

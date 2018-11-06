@@ -51,6 +51,7 @@
                 <section class="form-section">
                     <mat-form-field class="form-margin">
                         <input matInput formControlName="author" placeholder="Name">
+                        <mat-error *ngIf="formErrors.author">{{formErrors.author}}</mat-error>
                     </mat-form-field>
                 </section> 
                 <section class="form-section">
@@ -66,7 +67,11 @@
                 <section class="form-section">
                     <mat-form-field class="form-margin full-width">
                         <textarea matInput formControlName="comment" placeholder="Your comment"></textarea>
+                        <mat-error *ngIf="formErrors.comment">{{formErrors.comment}}</mat-error>
                     </mat-form-field>
+                </section>
+                <section class="form-section">
+                    <button type="submit" [disabled]="commentForm.invalid" mat-button class="background-primary text-floral-white">Submit</button>
                 </section>
                 
             </form>
