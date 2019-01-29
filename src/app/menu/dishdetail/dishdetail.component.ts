@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { DishService } from '../../services/dish.service';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
@@ -24,6 +24,8 @@ export class DishdetailComponent implements OnInit {
     next: number;
     commentForm: FormGroup;
 
+    @ViewChild('cform') commentFormDirective;
+
     formErrors = {
         'author': '',
         'comment': ''
@@ -41,15 +43,15 @@ export class DishdetailComponent implements OnInit {
     }
 
     constructor(private route: ActivatedRoute, private dishService: DishService, private location: Location,
-        private fb: FormBuilder) { }
+        private fb: FormBuilder, @Inject('BaseURL') private BaseURL) { }
 
     ngOnInit() {
         // getting all dish ids from observable
         this.dishService.getDishIds()
             .subscribe(ids => this.dishIds = ids);
         this.route.params.pipe(switchMap((params: Params) => this.dishService.getDish(Number(params['id']))))
-            .subscribe(dish => {this.dish = dish; console.log(this.dish); this.setPrevNext(this.dish.id)});
-        
+            .subscribe(dish => {this.dish = dish; this.setPrevNext(this.dish.id)});
+
         // this.dishService.getDish(id) //this was replaced by above subscription to change of current param=id in url
         //     .subscribe(dish => this.dish = dish)
             // for version with Promise
@@ -69,11 +71,13 @@ export class DishdetailComponent implements OnInit {
 
         this.commentForm.valueChanges
             .subscribe(formData => this.onValueChange(formData));
+
+        this.onValueChange();
     }
 
     onValueChange(data?: any) {
-        console.log(`onValueChange: formData from valueChanges Observable: ${data}`);
-        console.log(data);
+        // console.log(`onValueChange: formData from valueChanges Observable: ${data}`);
+        // console.log(data);
         const form = this.commentForm;
         for (const field in this.formErrors) {
             this.formErrors[field] = '';
@@ -83,11 +87,11 @@ export class DishdetailComponent implements OnInit {
                     this.formErrors[field] += this.validationMessages[field][error];
                 }
             }
-            
+
         }
-        console.log(`formErrors:`);
-        console.log(this.formErrors);
-        console.log(this.commentForm);
+        // console.log(`formErrors:`);
+        // console.log(this.formErrors);
+        // console.log(this.commentForm);
     }
 
     goBack(): void {
@@ -104,6 +108,36 @@ export class DishdetailComponent implements OnInit {
         // course solution this.next = this.dishIds[(this.dishIds.length + currentIndex + 1) % this.dishIds.length];
         // my solution
         this.next = this.dishIds[currentIndex === this.dishIds.length - 1 ? 0 : currentIndex + 1];
-    } 
+    }
+
+    onSubmit() {
+        const date = new Date();
+        const commentFormControls = this.commentForm.controls;
+        this.dish.comments.push({
+            rating: commentFormControls['rating'].value,
+            comment: commentFormControls['comment'].value,
+            author: commentFormControls['author'].value,
+            date: date.toISOString()
+        });
+
+        // this.commentForm.reset();    this resets all controls values to null and inputs are marked as invalid
+
+        // this.commentForm.reset(
+        //     {
+        //         author: {value: '', disabled: false},  // this works only with disabled: true or false
+        //         rating: [5],
+        //         comment: ''
+        //     }
+        // );  // sets values alright but still marked as invalid = red I think ng-touched causes that
+        // because of a problem with marking required fields red automatically after reset,
+        // we use below method
+        this.commentFormDirective.resetForm(
+            {
+                author: '',
+                rating: [5],
+                comment: ''
+            }
+        );
+    }
 
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Dish } from '../shared/dish';
 // TODO: remove DISHES from here and create separate file to store it in central location: "shared" folder
 // import { DISHES } from '../shared/dishes';
@@ -13,8 +13,12 @@ import { DishService } from '../services/dish.service';
 export class MenuComponent implements OnInit {
 
     dishes: Dish[];
-    selectedDish: Dish;
-    constructor(private dishService: DishService) { }
+    // changing to routerLink
+    // selectedDish: Dish;
+    constructor(
+        private dishService: DishService,
+        @Inject('BaseURL') private BaseURL      // way to inject value, cause it is not a class as service is
+        ) { }                                   // need to use it in template to provide src of images from server
 
     ngOnInit() {
         this.dishService.getDishes()

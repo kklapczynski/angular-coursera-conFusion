@@ -2,22 +2,22 @@
     <h3>Please wait...</h3>
     <mat-spinner></mat-spinner>
 </div>
-<div 
+<div
     class="container"
     fxLayout="row"
     fxLayout.sm="column"
     fxLayout.xs="column"
     fxLayoutAlign.gt-md="space-around center"
-    fxLayoutGap="10px" 
+    fxLayoutGap="10px"
     fxLayoutGap.xs="0"
     *ngIf="dish">
-  
+
   <div fxFlex="50">
         <mat-card>
             <mat-card-header>
                 <h3> {{dish.name | uppercase}} </h3>
             </mat-card-header>
-            <img mat-card-image src="{{dish.image}}" alt="{{dish.name}}">
+            <img mat-card-image src="{{BaseURL + dish.image}}" alt="{{dish.name}}">
             <mat-card-content>
                 <p>{{dish.description}}</p>
             </mat-card-content>
@@ -45,15 +45,20 @@
                 <p matLine>{{comment.rating}} Stars</p>
                 <p matLine>-- {{comment.author}} {{comment.date | date}}</p>
             </mat-list-item>
+            <mat-list-item *ngIf="commentForm.valid">
+                <p matLine>{{commentForm.controls['comment'].value}}</p>
+                <p matLine>{{commentForm.controls['rating'].value}} Stars</p>
+                <p matLine>-- {{commentForm.controls['author'].value}}</p>
+            </mat-list-item>
         </mat-list>
         <div class="comment-form-container">
-            <form [formGroup]="commentForm">
+            <form [formGroup]="commentForm" #cform="ngForm" (ngSubmit)="onSubmit()">
                 <section class="form-section">
                     <mat-form-field class="form-margin">
                         <input matInput formControlName="author" placeholder="Name">
                         <mat-error *ngIf="formErrors.author">{{formErrors.author}}</mat-error>
                     </mat-form-field>
-                </section> 
+                </section>
                 <section class="form-section">
                     <mat-slider class="form-margin"
                         formControlName="rating"
@@ -73,11 +78,7 @@
                 <section class="form-section">
                     <button type="submit" [disabled]="commentForm.invalid" mat-button class="background-primary text-floral-white">Submit</button>
                 </section>
-                
             </form>
         </div>
-        
-        
   </div>
-
 </div>
