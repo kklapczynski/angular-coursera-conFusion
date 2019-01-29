@@ -2,21 +2,23 @@ import { Injectable } from '@angular/core';
 import { Dish } from '../shared/dish';
 import { DISHES } from '../shared/dishes';
 import { of, Observable } from 'rxjs';
-import { delay, map  } from 'rxjs/operators';
+import { delay, map, catchError  } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { baseURL } from '../shared/baseurl';
+import { ProcessHTTPMsgService } from './process-httpmsg.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DishService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private processHTTPMsgService: ProcessHTTPMsgService) { }
 
   getDishes(): Observable<Dish[]> {
     // getting data from the server
-    return this.http.get<Dish[]>(`${baseURL}dishes `);
-
+    return this.http.get<Dish[]>(`${baseURL}dishes`)
+      // pipe the observable returned by HttpClient method through the error handler
+      .pipe(catchError(this.processHTTPMsgService.handleError));
 
     // version with data getting from file
     // return of(DISHES).pipe(delay(2000));
@@ -30,8 +32,8 @@ export class DishService {
   }
   getDish(id: number): Observable<Dish> {
     // data from server
-    return this.http.get<Dish>(`${baseURL}dishes/${id}`);
-
+    return this.http.get<Dish>(`${baseURL}dishes/${id}`)
+      .pipe(catchError(this.processHTTPMsgService.handleError));
 
     // version with data getting from file
     // replacing a promise with an observable
@@ -49,7 +51,8 @@ export class DishService {
   getFeaturedDish(): Observable<Dish> {
     // getting data from server
     return this.http.get<Dish>(`${baseURL}dishes?featured=true`)
-      .pipe(map(dishes => { return dishes[0] }));
+      .pipe(map(dishes => { return dishes[0] }))
+      .pipe(catchError(this.processHTTPMsgService.handleError));
 
     // version with data getting from file
     // return of(DISHES.filter( dish => dish.featured)[0]).pipe(delay(2000));
@@ -60,10 +63,14 @@ export class DishService {
     //   }, 2000);
     // });
   }
-  getDishIds(): Observable<number[]> {
+  getDishIds(): Observable<number[] | any> {
     // version with data from server
+
     return this.getDishes()
-      .pipe(map(dishes => dishes.map(dish => dish.id)));
+      .pipe(map(dishes => dishes.map(dish => dish.id)))
+      // handle error: client-side, network or server returned errors are already handled in getDishes()
+      // so just need to catch error in mapping returned dishes to theirs ids
+      .pipe(catchError(error => error));
 
     // version with data getting from file
     // return of(DISHES.map( dish => dish.id));

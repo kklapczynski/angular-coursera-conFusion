@@ -1,6 +1,10 @@
-<div *ngIf="!dish" class="div-center">
+<div *ngIf="!dish || !errorMessage" class="div-center">
     <h3>Please wait...</h3>
     <mat-spinner></mat-spinner>
+</div>
+<div *ngIf="errorMessage" class="div-center">
+    <h2>Error</h2>
+    <h4>{{errorMessage}}</h4>
 </div>
 <div
     class="container"

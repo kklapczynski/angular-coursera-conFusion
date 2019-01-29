@@ -23,6 +23,7 @@ export class DishdetailComponent implements OnInit {
     prev: number;
     next: number;
     commentForm: FormGroup;
+    errorMessage: string;
 
     @ViewChild('cform') commentFormDirective;
 
@@ -48,9 +49,14 @@ export class DishdetailComponent implements OnInit {
     ngOnInit() {
         // getting all dish ids from observable
         this.dishService.getDishIds()
-            .subscribe(ids => this.dishIds = ids);
+            .subscribe(
+                ids => this.dishIds = ids,
+                error => this.errorMessage = <any>error);
         this.route.params.pipe(switchMap((params: Params) => this.dishService.getDish(Number(params['id']))))
-            .subscribe(dish => {this.dish = dish; this.setPrevNext(this.dish.id)});
+            .subscribe(
+                dish => {this.dish = dish; this.setPrevNext(this.dish.id)},
+                error => this.errorMessage = <any>error
+                );
 
         // this.dishService.getDish(id) //this was replaced by above subscription to change of current param=id in url
         //     .subscribe(dish => this.dish = dish)

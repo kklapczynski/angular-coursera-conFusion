@@ -15,6 +15,7 @@ export class MenuComponent implements OnInit {
     dishes: Dish[];
     // changing to routerLink
     // selectedDish: Dish;
+    errorMessage: string;   // string to display to the user when error occurs
     constructor(
         private dishService: DishService,
         @Inject('BaseURL') private BaseURL      // way to inject value, cause it is not a class as service is
@@ -22,7 +23,9 @@ export class MenuComponent implements OnInit {
 
     ngOnInit() {
         this.dishService.getDishes()
-            .subscribe(dishes => this.dishes = dishes);
+            .subscribe(
+                dishes => this.dishes = dishes,         // success path: observable resolves to success
+                error => this.errorMessage = <any>error);    // error path: observable resolves to error
     }
     // changing to routerLink
     // onSelect(dish: Dish) {
