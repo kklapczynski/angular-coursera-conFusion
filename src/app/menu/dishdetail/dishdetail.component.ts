@@ -19,6 +19,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class DishdetailComponent implements OnInit {
     //@Input() changing to use routerLink
     dish: Dish;
+    dishCopy: Dish;
     dishIds: number[];
     prev: number;
     next: number;
@@ -52,11 +53,12 @@ export class DishdetailComponent implements OnInit {
             .subscribe(
                 ids => this.dishIds = ids,
                 error => this.errorMessage = <any>error);
-        this.route.params.pipe(switchMap((params: Params) => this.dishService.getDish(Number(params['id']))))
+        this.route.params
+            .pipe(switchMap((params: Params) => this.dishService.getDish(Number(params['id']))))
             .subscribe(
-                dish => {this.dish = dish; this.setPrevNext(this.dish.id)},
+                dish => {this.dish = dish; this.dishCopy = dish; this.setPrevNext(this.dish.id)},
                 error => this.errorMessage = <any>error
-                );
+            );
 
         // this.dishService.getDish(id) //this was replaced by above subscription to change of current param=id in url
         //     .subscribe(dish => this.dish = dish)
@@ -119,12 +121,21 @@ export class DishdetailComponent implements OnInit {
     onSubmit() {
         const date = new Date();
         const commentFormControls = this.commentForm.controls;
-        this.dish.comments.push({
+        // we are using dishCopy to send it to server with putDish method, so the view will be updated
+        // with new comment only when saving om server is successful:
+        // dish object returned and saved in this.dish
+        this.dishCopy.comments.push({
             rating: commentFormControls['rating'].value,
             comment: commentFormControls['comment'].value,
             author: commentFormControls['author'].value,
             date: date.toISOString()
         });
+
+        this.dishService.putDish(this.dishCopy)
+            .subscribe(
+                dish => { this.dish = dish; this.dishCopy = dish },
+                error => { this.dish = null; this.dishCopy = null; this.errorMessage = <any>error;}
+            )
 
         // this.commentForm.reset();    this resets all controls values to null and inputs are marked as invalid
 
