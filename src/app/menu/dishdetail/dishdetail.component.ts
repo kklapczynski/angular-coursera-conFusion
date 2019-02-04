@@ -5,13 +5,27 @@ import { Location } from '@angular/common';
 import { Dish } from '../../shared/dish';
 import { switchMap } from 'rxjs/operators';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 
 
 
 @Component({
   selector: 'app-dishdetail',
   templateUrl: './dishdetail.component.html',
-  styleUrls: ['./dishdetail.component.scss']
+  styleUrls: ['./dishdetail.component.scss'],
+  animations: [
+      trigger('visibility', [
+          state('shown', style({
+            transform: 'scale(1.0)',
+            opacity: 1
+          })),
+          state('hidden', style({
+            transform: 'scale(0)',
+            opacity: 0
+          })),
+          transition('* => *', animate('0.5s ease-in-out'))
+      ])
+  ]
 })
 // TODO: this component needs to be able to receive and use data of selected "dish":
     // 1.Add event binding and handler in menu component: click on mat-grid-tile = dish
@@ -25,7 +39,8 @@ export class DishdetailComponent implements OnInit {
     next: number;
     commentForm: FormGroup;
     errorMessage: string;
-
+    visibility = 'shown';   // property of component: initial value -> 'shown' after dish chosen in menu component
+                            // TODO: check ES6 classes (in UDEMY course info, that classes cannot have properties inherited - only mathods)
     @ViewChild('cform') commentFormDirective;
 
     formErrors = {
@@ -54,9 +69,16 @@ export class DishdetailComponent implements OnInit {
                 ids => this.dishIds = ids,
                 error => this.errorMessage = <any>error);
         this.route.params
-            .pipe(switchMap((params: Params) => this.dishService.getDish(Number(params['id']))))
+            .pipe(switchMap(
+                    (params: Params) => {
+                        this.visibility = 'hidden'; // hide current dish when new one requested from server
+                        return this.dishService.getDish(Number(params['id']));
+                    })
+            )
             .subscribe(
-                dish => {this.dish = dish; this.dishCopy = dish; this.setPrevNext(this.dish.id)},
+                dish => {this.dish = dish; this.dishCopy = dish;
+                            this.setPrevNext(this.dish.id);
+                            this.visibility = 'shown'}, // show new dish when observable resloved successfully
                 error => this.errorMessage = <any>error
             );
 
