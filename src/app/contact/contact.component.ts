@@ -1,14 +1,25 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Feedback, ContactType } from '../shared/feedback';
+import { flyInOut } from '../animations/app.animations';
 
 @Component({
   selector: 'app-contact',
   templateUrl: './contact.component.html',
-  styleUrls: ['./contact.component.scss']
+  styleUrls: ['./contact.component.scss'],
+  host: {
+    '[@flyInOut]': '',
+    'style': 'display: block;'    // TODO: animation doesn't work well, cause when route changes component is added
+                                  // dispayed as a block so previous one jumps down under new one, so no fly
+                                  // effect achieved; fixed / absolute positioning should be used
+                                  // but then there is problem of overlapping with footer
+  },
+  animations: [
+      flyInOut()
+  ]
 })
 export class ContactComponent implements OnInit {
-  
+
   feedbackForm: FormGroup;
   feedback: Feedback;
   contactType = ContactType;
@@ -69,9 +80,9 @@ export class ContactComponent implements OnInit {
 
   onValueChanged(data?: any) {
     if(!this.feedbackForm) return;
-    
+
     const form = this.feedbackForm;
-    
+
     for (const field in this.formErrors) {
       if(this.formErrors.hasOwnProperty(field)) {
         this.formErrors[field] = '';

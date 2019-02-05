@@ -4,11 +4,22 @@ import { Dish } from '../shared/dish';
 // import { DISHES } from '../shared/dishes';
 // TODO: replace importing directly DISHES by using service
 import { DishService } from '../services/dish.service';
+import { flyInOut, expand } from '../animations/app.animations';
 
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
-  styleUrls: ['./menu.component.scss']
+  styleUrls: ['./menu.component.scss'],
+  host: {
+    '[@flyInOut]': '',
+    'style': 'display: block;'  // TODO: animation doesn't work well, cause when route changes component is added
+  },                            // dispayed as a block so previous one jumps down under new one, so no fly
+                                // effect achieved; fixed / absolute positioning should be used
+                                // but then there is problem of overlapping with footer
+  animations: [
+      flyInOut(),
+      expand()
+  ]
 })
 export class MenuComponent implements OnInit {
 
