@@ -29,6 +29,8 @@ export function flyInOut() {
     // dispayed as a block (see component files) so previous one jumps down under new one, so no fly
     // effect achieved; fixed / absolute positioning should be used
     // but then there is problem of overlapping with footer
+
+    // good example of trigger: https://medium.com/google-developer-experts/angular-2-animate-router-transitions-6de179e00204
 }
 
 export function expand() {

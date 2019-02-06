@@ -5,7 +5,7 @@
      fxLayoutAlign.gt-md="space-around center"
      fxLayoutGap="10px">
 
-  <mat-card *ngIf="dish" fxFlex [@expand]>
+  <mat-card class="home-mat-card" *ngIf="dish" fxFlex [@expand]>
     <mat-card-header>
       <div mat-card-avatar></div>
       <mat-card-title>
@@ -19,12 +19,12 @@
     </mat-card-content>
   </mat-card>
 
-  <mat-card *ngIf="dishErrorMessage">
+  <mat-card class="home-mat-card" *ngIf="dishErrorMessage">
     <h2>Error</h2>
     <h4>{{dishErrorMessage}}</h4>
   </mat-card>
 
-  <mat-card *ngIf="!dish && !dishErrorMessage" fxFlex>
+  <mat-card class="home-mat-card" *ngIf="!dish && !dishErrorMessage" fxFlex>
     <mat-card-header>
       <div mat-card-avatar></div>
       <mat-card-title>
@@ -34,7 +34,12 @@
     <mat-spinner class="spinner-center"></mat-spinner>
   </mat-card>
 
-  <mat-card *ngIf="!promotion" fxFlex>
+  <mat-card class="home-mat-card" *ngIf="promotionErrorMessage">
+    <h2>Error</h2>
+    <h4>{{promotionErrorMessage}}</h4>
+  </mat-card>
+
+  <mat-card class="home-mat-card" *ngIf="!promotion && !promotionErrorMessage" fxFlex>
     <mat-card-header>
       <div mat-card-avatar></div>
       <mat-card-title>
@@ -44,21 +49,21 @@
     <mat-spinner class="spinner-center"></mat-spinner>
   </mat-card>
 
-  <mat-card *ngIf="promotion" fxFlex [@expand]>
+  <mat-card class="home-mat-card" *ngIf="promotion" fxFlex [@expand]>
     <mat-card-header>
       <div mat-card-avatar></div>
       <mat-card-title>
         <h3>{{promotion.name | uppercase}}</h3>
       </mat-card-title>
     </mat-card-header>
-    <img mat-card-image src={{promotion.image}} alt={{promotion.name}}>
+    <img mat-card-image src={{BaseURL+promotion.image}} alt={{promotion.name}}>
     <mat-card-content>
       <p>{{promotion.description}}
       </p>
     </mat-card-content>
   </mat-card>
 
-  <mat-card *ngIf="!leader" fxFlex>
+  <mat-card class="home-mat-card" *ngIf="!leader" fxFlex>
     <mat-card-header>
       <div mat-card-avatar></div>
       <mat-card-title>
@@ -68,7 +73,7 @@
     <mat-spinner class="spinner-center"></mat-spinner>
   </mat-card>
 
-  <mat-card *ngIf="leader" fxFlex [@expand]>
+  <mat-card class="home-mat-card" *ngIf="leader" fxFlex [@expand]>
     <mat-card-header>
       <div mat-card-avatar></div>
       <mat-card-title>
