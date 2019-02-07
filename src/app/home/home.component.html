@@ -63,7 +63,12 @@
     </mat-card-content>
   </mat-card>
 
-  <mat-card class="home-mat-card" *ngIf="!leader" fxFlex>
+  <mat-card class="home-mat-card" *ngIf="leaderErrorMessage">
+    <h2>Error</h2>
+    <h4>{{leaderErrorMessage}}</h4>
+  </mat-card>
+
+  <mat-card class="home-mat-card" *ngIf="!leader && !leaderErrorMessage" fxFlex>
     <mat-card-header>
       <div mat-card-avatar></div>
       <mat-card-title>
@@ -80,7 +85,7 @@
         <h3>{{leader.name | uppercase}} {{leader.abbr}}</h3>
       </mat-card-title>
     </mat-card-header>
-    <img mat-card-image src={{leader.image}} alt={{leader.name}}>
+    <img mat-card-image src={{BaseURL+leader.image}} alt={{leader.name}}>
     <mat-card-content>
       <p>{{leader.designation}}</p>
       <p>{{leader.description}}</p>

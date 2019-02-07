@@ -1,6 +1,7 @@
 <div class="container"
   fxLayout="column"
-  fxLayoutGap="10px">
+  fxLayoutGap="10px"
+  >
 
   <div fxFlex>
     <div>
@@ -53,17 +54,28 @@
     </mat-card>
   </div>
 
+  <div fxLayout="column">
+    <h2 matHeader>Corporate Leadership</h2>
+    <mat-card *ngIf="leadersErrorMessage">
+      <h2>Error</h2>
+      <h4>{{leadersErrorMessage}}</h4>
+    </mat-card>
 
-  <div fxFlex>
-
-    <!-- <p>Display the details of the corporate leaders here</p> -->
-    <mat-list>
-        <h2 matHeader>Corporate Leadership</h2>
-        <mat-list-item fxLayout="column" *ngFor="let leader of leaders" [@expand]>
-            <img matListAvatar src="{{leader.image}}" alt="leader photo">
-            <p matLine>{{leader.name}} {{leader.abbr}}</p>
-            <p matLine>{{leader.designation}}</p>
-            <p matLine>{{leader.description}}</p>
+    <mat-card *ngIf="!leaders && !leadersErrorMessage" fxFlex>
+      <mat-card-header>
+        <div mat-card-avatar></div>
+        <mat-card-title>
+          <h3>Please wait...</h3>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-spinner class="spinner-center"></mat-spinner>
+    </mat-card>
+    <mat-list fxFlex>
+        <mat-list-item class="leader-list-item" *ngFor="let leader of leaders" [@expand] fxLayout="row">
+          <img matListAvatar src="{{BaseURL + leader.image}}" alt="leader photo">
+          <p matLine>{{leader.name}} {{leader.abbr}}</p>
+          <p matLine>{{leader.designation}}</p>
+          <p matLine class="leader-description">{{leader.description}}</p>
         </mat-list-item>
     </mat-list>
   </div>

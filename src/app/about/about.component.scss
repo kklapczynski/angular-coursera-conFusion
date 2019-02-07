@@ -1,0 +1,18 @@
+.about-leaders-container {
+    flex: 1 1 100%;
+    box-sizing: border-box;
+    flex-direction: row;
+    display: flex;
+
+}
+
+.leader-list-item {
+    height: initial !important;
+    padding: 16px 16px;
+}
+
+::ng-deep .leader-description {
+    word-wrap: break-word !important;
+    white-space: pre-wrap !important;
+    padding-top: 5px !important;
+}
