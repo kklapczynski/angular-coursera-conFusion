@@ -29,7 +29,7 @@ export class DishdetailComponent implements OnInit {
     commentForm: FormGroup;
     errorMessage: string;
     visibility = 'shown';   // property of component: initial value -> 'shown' after dish chosen in menu component
-                            // TODO: check ES6 classes (in UDEMY course info, that classes cannot have properties inherited - only mathods)
+                            // TODO: check ES6 classes (in UDEMY course info, that classes cannot have properties inherited - only methods)
     @ViewChild('cform') commentFormDirective;
 
     formErrors = {
