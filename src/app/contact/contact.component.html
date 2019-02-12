@@ -35,10 +35,33 @@
       </div>
     </div>
   </div>
+
+  <!-- FEEDBACK FORM -->
   <div fxFlex fxFlexOffset="20px" class="form-size">
     <h3>Send us your Feedback</h3>
+    <div *ngIf="sendingFeedback && !errorMessage" [@visibility2] class="div-center">
+      <h3>Sending your message...</h3>
+      <mat-spinner></mat-spinner>
+    </div>
+    <div *ngIf="errorMessage" [@visibility2] class="div-center">
+        <h2>Error</h2>
+        <h4>{{errorMessage}}</h4>
+    </div>
+    <!-- SUBMISSION CONFIRMATION -->
+    <div *ngIf="displayConfirmation" [@expand] class="div-center">
+      <h3>Your Submission</h3>
+      <p matLine>First name: {{feedbackReturnedFromServer.firstname}}</p>
+      <p matLine>Last name: {{feedbackReturnedFromServer.lastname}}</p>
+      <p matLine>Tel. number: {{feedbackReturnedFromServer.telnum}}</p>
+      <p matLine>Email: {{feedbackReturnedFromServer.email}}</p>
+      <p matLine>Contact You?: {{feedbackReturnedFromServer.agree}}</p>
+      <p matLine>How?: {{feedbackReturnedFromServer.contacttype}}</p>
+      <p matLine>Feedback: {{feedbackReturnedFromServer.message}}</p>
+    </div>
+
     <!-- <p>{{this.feedbackForm.value | json}} {{ feedbackForm.status | json }}</p> -->
-    <form  [formGroup]="feedbackForm" #fform="ngForm" (ngSubmit)="onSubmit()">
+
+    <form *ngIf="!sendingFeedback && !displayConfirmation" [@expand] [formGroup]="feedbackForm" #fform="ngForm" (ngSubmit)="onSubmit()">
       <p>
         <mat-form-field class="half-width">
           <input matInput formControlName="firstname" type="text" placeholder="First name" required >

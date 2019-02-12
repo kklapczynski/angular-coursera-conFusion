@@ -14,6 +14,14 @@ export function visibility() {
     ])
 }
 
+export function visibility2() {
+    return trigger('visibility2', [
+        state('void', style({ transform: 'scale(0)', opacity: 0 })),    // style when not in the view
+        state('*', style({ transform: 'scale(1.0)', opacity: 1 })),     // style when in the view
+        transition('* => *', animate('0.5s ease-in-out'))               // animation when switching state
+    ])
+}
+
 export function flyInOut() {
     return trigger('flyInOut', [
         state('*', style({ opacity: 1, transform: 'translateX(0)'})),
@@ -35,7 +43,7 @@ export function flyInOut() {
 
 export function expand() {
     return trigger('expand', [
-        state('*', style({opacity: 1, transform: 'trnaslateX(0%)'})),
+        state('*', style({opacity: 1, transform: 'translateX(0%)'})),
         transition(':enter', [
             style({opacity: 0, transform: 'translateY(-50%)'}),
             animate('0.5s ease-in', style({opacity: 1, transform: 'translateX(0%)'}))

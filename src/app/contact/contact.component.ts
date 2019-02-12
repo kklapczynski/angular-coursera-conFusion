@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Feedback, ContactType } from '../shared/feedback';
-import { flyInOut } from '../animations/app.animations';
+import { flyInOut, visibility2, expand } from '../animations/app.animations';
 import { FeedbackService } from '../services/feedback.service';
 
 @Component({
@@ -16,13 +16,18 @@ import { FeedbackService } from '../services/feedback.service';
                                   // but then there is problem of overlapping with footer
   },
   animations: [
-      flyInOut()
+      flyInOut(),
+      visibility2(),
+      expand()
   ]
 })
 export class ContactComponent implements OnInit {
 
   feedbackForm: FormGroup;
   feedback: Feedback;
+  feedbackReturnedFromServer: Feedback;
+  sendingFeedback: boolean;
+  displayConfirmation: boolean;
   contactType = ContactType;
 
   @ViewChild('fform') feedbackFormDirective;
@@ -102,34 +107,52 @@ export class ContactComponent implements OnInit {
   }
 
   onSubmit() {
-    this.feedback = this.feedbackForm.value;
-    console.warn(this.feedback);
+    // show spinner and remove (*ngIf) form from view
+    this.sendingFeedback = true;
 
-    //TODO: use service to post feedback to the server
+    // get values from form group object
+    this.feedback = this.feedbackForm.value;
+
+    //use service to post feedback to the server
     this.feedbackService.submitFeedback(this.feedback)
       .subscribe(
-        feedback => { console.log(`feedback submitted to server: ${feedback}`)
-                      // reset form
-                    },
+        feedback => {
+          // server returned feedback object
+          this.feedbackReturnedFromServer = feedback;
+          // hide spinner
+          this.sendingFeedback = false;
+
+          // display submission confirmation
+          this. displayConfirmation = true;
+// better solution from peer reviews: C:\Krzysztof\Programming\_COURSERA\Coursera_FullStack\Angular\coursera_peer_reviews\Assignment_4\2
+// resetForm a bit different: includes flags switching and used in setOut() AND form with [hidden] NOT with *ngIf
+          // hide submission confirmation after 5s
+          setTimeout( () => this.displayConfirmation = false, 5000);
+          // resetFeedbackForm() doesn't work in above setOut, cause this.feedbackFormDirective is undefined
+          // still after this.displayConfirmation = false - I guess before setOut() finished DOM
+          // rerendering on changed *ngIf condition doesn't happen
+          setTimeout( () => this.resetFeedbackForm(), 5001);
+          // TODO: try to replace above with .map(timeOut 5s) and .mergeMap(resetForm)
+          // https://stackoverflow.com/questions/34104638/how-to-chain-http-calls-in-angular2
+        },
         error => { console.log(`feedback not submitted cause of error: ${error}`)}
       )
+  }
+// see: https://stackoverflow.com/questions/44575494/angular-2-formcontrol-reset-doesnt-work-but-resetform-does-but-typescrip
+// or try this solution:
+// this.feedbackForm.reset({
+//   firstname: '',
+//   lastname: '',
+//   telnum: 0,
+//   email: '',
+//   agree: false,
+//   contacttype: 'None',
+//   message: ''
+// });
+// this.feedbackFormDirective.resetForm();
 
-    // this.feedbackForm.reset();
-    // reset using ViewChild does the job of below reset, taht is why it is commented out
-    // this.feedbackForm.reset(
-    //   {
-    //     firstname: '',
-    //     lastname: '',
-    //     telnum: '',
-    //     email: '',
-    //     agree: false,
-    //     contacttype: 'None',
-    //     message: ''
-    //   }
-    // );
-    // this.feedback = this.feedbackForm.value;
-    // console.log('this.feedback after reset:');
-    // console.warn(this.feedback);
+  resetFeedbackForm() {
+    // reset view
     this.feedbackFormDirective.resetForm(
       {
         firstname: '',
@@ -141,8 +164,7 @@ export class ContactComponent implements OnInit {
         message: ''
       }
     );
+    // reset data
     this.feedback = this.feedbackForm.value;
-    console.log('this.feedback after reseting ngForm using ViewChild:');
-    console.warn(this.feedback);
   }
 }

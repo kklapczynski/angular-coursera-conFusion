@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Promotion } from '../shared/promotion';
-import { PROMOTIONS } from '../shared/promotions';
+// import { PROMOTIONS } from '../shared/promotions';
 import { of, Observable } from 'rxjs';
 import { delay, map, catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
@@ -15,7 +15,8 @@ export class PromotionService {
   constructor(private http: HttpClient, private processHttpMsgService: ProcessHTTPMsgService) { }
 
   getPromotions(): Observable<Promotion[]> {
-    return this.http.get<Promotion[]>(`${baseURL}promotions`);
+    return this.http.get<Promotion[]>(`${baseURL}promotions`)
+      .pipe(catchError(this.processHttpMsgService.handleError))
     // return of(PROMOTIONS).pipe(delay(2000));
     // return Promise.resolve(PROMOTIONS);
   }
