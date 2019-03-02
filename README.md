@@ -1,4 +1,15 @@
 # ConFusion
+This project was developed with the Coursera course of The Hong Kong University of Science and Technology: Front-End JavaScript Frameworks: Angular.
+
+# How to run project
+1. clone or download project to your machine
+2. run `npm install` to install all packages for the project
+3. run `npm install -g json-server` to install json-server which simulates work of remote server on your local machine
+4. go to **json-server** folder
+5. run `json-sever --watch db.json -d 2000` to serve db.json and reload it after any change to it with delay of 2 seconds to simulate network
+6. go back to **confusion** folder and run `ng serve`
+7. open app in your browser: `http://localhost:4200`
+
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.2.2.
 

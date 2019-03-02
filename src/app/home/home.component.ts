@@ -49,13 +49,10 @@ export class HomeComponent implements OnInit {
                 promotion => this.promotion = promotion,
                 error => this.promotionErrorMessage = error
             );
-            // .then(promotion => this.promotion = promotion);
         this.leaderService.getFeaturedLeader()
             .subscribe(
                 leader => this.leader = leader,
                 error => this.leaderErrorMessage = <any>error
             );
-            // .then(leader => this.leader = leader);
     }
-
 }

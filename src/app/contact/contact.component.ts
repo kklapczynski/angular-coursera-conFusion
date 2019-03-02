@@ -96,14 +96,11 @@ export class ContactComponent implements OnInit {
         if(control && control.dirty && !control.valid) {
           const messages = this.validationMessages[field];
           for (const key in control.errors) {
-            // if (control.errors.hasOwnProperty(key))  // not needed imo
             this.formErrors[field] += messages[key];
           }
         }
       }
     }
-    // console.log(this.formErrors);
-
   }
 
   onSubmit() {
@@ -124,13 +121,10 @@ export class ContactComponent implements OnInit {
 
           // display submission confirmation
           this. displayConfirmation = true;
-// better solution from peer reviews: C:\Krzysztof\Programming\_COURSERA\Coursera_FullStack\Angular\coursera_peer_reviews\Assignment_4\2
+// TODO: better solution from peer reviews: C:\Krzysztof\Programming\_COURSERA\Coursera_FullStack\Angular\coursera_peer_reviews\Assignment_4\2
 // resetForm a bit different: includes flags switching and used in setOut() AND form with [hidden] NOT with *ngIf
           // hide submission confirmation after 5s
           setTimeout( () => this.displayConfirmation = false, 5000);
-          // resetFeedbackForm() doesn't work in above setOut, cause this.feedbackFormDirective is undefined
-          // still after this.displayConfirmation = false - I guess before setOut() finished DOM
-          // rerendering on changed *ngIf condition doesn't happen
           setTimeout( () => this.resetFeedbackForm(), 5001);
           // TODO: try to replace above with .map(timeOut 5s) and .mergeMap(resetForm)
           // https://stackoverflow.com/questions/34104638/how-to-chain-http-calls-in-angular2
@@ -139,17 +133,6 @@ export class ContactComponent implements OnInit {
       )
   }
 // see: https://stackoverflow.com/questions/44575494/angular-2-formcontrol-reset-doesnt-work-but-resetform-does-but-typescrip
-// or try this solution:
-// this.feedbackForm.reset({
-//   firstname: '',
-//   lastname: '',
-//   telnum: 0,
-//   email: '',
-//   agree: false,
-//   contacttype: 'None',
-//   message: ''
-// });
-// this.feedbackFormDirective.resetForm();
 
   resetFeedbackForm() {
     // reset view

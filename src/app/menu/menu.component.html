@@ -9,7 +9,6 @@
         <h3>Please wait...</h3>
         <mat-spinner></mat-spinner>
     </div>
-    <!-- to display error if occurs -->
     <div *ngIf="errorMessage" class="div-center">
         <h2>Error</h2>
         <h4>{{errorMessage}}</h4>
@@ -17,14 +16,9 @@
     <div *ngIf="dishes">
         <mat-grid-list cols="2" rowHeight="200px" fxFlex>
             <mat-grid-tile *ngFor="let dish of dishes" [routerLink]="['/dishdetail', dish.id]" appHighlight [@expand]>
-            <!-- changing to use routerLink  (click)="onSelect(dish)"> -->
                 <img height="200px" src="{{BaseURL + dish.image}}" alt={{dish.name}}>
                 <mat-grid-tile-footer>{{dish.name | uppercase}}</mat-grid-tile-footer>
             </mat-grid-tile>
         </mat-grid-list>
     </div>
-
-    <!-- <div> changing to use routerLink
-        <app-dishdetail [dish]="selectedDish"></app-dishdetail>
-    </div> -->
 </div>

@@ -16,11 +16,7 @@ import { visibility, expand } from '../../animations/app.animations';
       expand()
   ]
 })
-// TODO: this component needs to be able to receive and use data of selected "dish":
-    // 1.Add event binding and handler in menu component: click on mat-grid-tile = dish
-    // 2.Pass selected dish to dishdetail component
 export class DishdetailComponent implements OnInit {
-    //@Input() changing to use routerLink
     dish: Dish;
     dishCopy: Dish;
     dishIds: number[];
@@ -29,7 +25,6 @@ export class DishdetailComponent implements OnInit {
     commentForm: FormGroup;
     errorMessage: string;
     visibility = 'shown';   // property of component: initial value -> 'shown' after dish chosen in menu component
-                            // TODO: check ES6 classes (in UDEMY course info, that classes cannot have properties inherited - only methods)
     @ViewChild('cform') commentFormDirective;
 
     formErrors = {
@@ -70,13 +65,6 @@ export class DishdetailComponent implements OnInit {
                             this.visibility = 'shown'}, // show new dish when observable resloved successfully
                 error => this.errorMessage = <any>error
             );
-
-        // this.dishService.getDish(id) //this was replaced by above subscription to change of current param=id in url
-        //     .subscribe(dish => this.dish = dish)
-            // for version with Promise
-            // .then(dish => this.dish = dish)
-            // .catch(errorString => console.log(errorString));
-
         this.createForm();
     }
 
@@ -95,8 +83,6 @@ export class DishdetailComponent implements OnInit {
     }
 
     onValueChange(data?: any) {
-        // console.log(`onValueChange: formData from valueChanges Observable: ${data}`);
-        // console.log(data);
         const form = this.commentForm;
         for (const field in this.formErrors) {
             this.formErrors[field] = '';
@@ -106,11 +92,7 @@ export class DishdetailComponent implements OnInit {
                     this.formErrors[field] += this.validationMessages[field][error];
                 }
             }
-
         }
-        // console.log(`formErrors:`);
-        // console.log(this.formErrors);
-        // console.log(this.commentForm);
     }
 
     goBack(): void {
@@ -120,12 +102,7 @@ export class DishdetailComponent implements OnInit {
     // calculating previous and next dish to use with buttons in dishdetail card
     setPrevNext(dishId: number): void {
         const currentIndex = this.dishIds.indexOf(dishId);
-        // need to enable going around meaning when on index 0 and prev clicked => goes to last item
-        //this.prev = this.dishIds[(this.dishIds.length + currentIndex -1) % this.dishIds.length]; // from course
-        // my solution
         this.prev = this.dishIds[currentIndex === 0 ? this.dishIds.length - 1 : currentIndex - 1];
-        // course solution this.next = this.dishIds[(this.dishIds.length + currentIndex + 1) % this.dishIds.length];
-        // my solution
         this.next = this.dishIds[currentIndex === this.dishIds.length - 1 ? 0 : currentIndex + 1];
     }
 

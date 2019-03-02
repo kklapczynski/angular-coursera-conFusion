@@ -1,6 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Leader } from '../shared/leader';
-// import { LEADERS } from '../shared/leaders';
 import { LeaderService } from '../services/leader.service';
 import { flyInOut, expand } from '../animations/app.animations';
 import { baseURL } from '../shared/baseurl';
@@ -33,7 +32,6 @@ export class AboutComponent implements OnInit {
                 leaders => this.leaders = leaders,
                 error => this.leadersErrorMessage = error
             );
-            // .then(leaders => this.leaders = leaders);
     }
 
 }
