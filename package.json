@@ -5,9 +5,13 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "buildProd": "ng build --prod --aot",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "clean": "shx rm -rf dist/*",
+    "release": "npm run clean && npm run buildProd",
+    "deploy": "cd dist && git add . && git commit -m \"New release\" && git push"
   },
   "private": true,
   "dependencies": {
@@ -46,6 +50,7 @@
     "karma-jasmine": "~1.1.2",
     "karma-jasmine-html-reporter": "^0.2.2",
     "protractor": "~5.4.0",
+    "shx": "^0.3.2",
     "ts-node": "~7.0.0",
     "tslint": "~5.11.0",
     "typescript": "~2.9.2"
