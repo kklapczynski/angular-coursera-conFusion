@@ -29,6 +29,7 @@ export class ContactComponent implements OnInit {
   sendingFeedback: boolean;
   displayConfirmation: boolean;
   contactType = ContactType;
+  errorMessage: string;
 
   @ViewChild('fform') feedbackFormDirective;
 
@@ -64,8 +65,7 @@ export class ContactComponent implements OnInit {
     this.createForm();
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   createForm() {
     this.feedbackForm = this.fb.group({
@@ -129,7 +129,7 @@ export class ContactComponent implements OnInit {
           // TODO: try to replace above with .map(timeOut 5s) and .mergeMap(resetForm)
           // https://stackoverflow.com/questions/34104638/how-to-chain-http-calls-in-angular2
         },
-        error => { console.log(`feedback not submitted cause of error: ${error}`)}
+        error => { this.errorMessage = error }
       )
   }
 // see: https://stackoverflow.com/questions/44575494/angular-2-formcontrol-reset-doesnt-work-but-resetform-does-but-typescrip

@@ -19,7 +19,7 @@ export class FeedbackService {
         'Content-Type': 'application/json'
       })
     }
-    return this.http.post<Feedback>(`${baseURL}feedback`, feedback, httpOptions)
+    return this.http.post<Feedback>(`${baseURL}feedback.json`, feedback, httpOptions)
       // pipe the observable returned by HttpClient method through the error handler
       .pipe(catchError(this.processHTTPMsgService.handleError));
   }

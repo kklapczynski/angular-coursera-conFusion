@@ -14,17 +14,17 @@ export class LeaderService {
   constructor(private http: HttpClient, private processHTTPMsgService: ProcessHTTPMsgService) { }
 
   getLeaders(): Observable<Leader[]> {
-    return this.http.get<Leader[]>(`${baseURL}leadership`)
+    return this.http.get<Leader[]>(`${baseURL}leadership.json`)
       .pipe(catchError(this.processHTTPMsgService.handleError));
   }
 
   getLeader(id: number): Observable<Leader> {
-    return this.http.get<Leader>(`${baseURL}leadership/${id}`)
+    return this.http.get<Leader>(`${baseURL}leadership.json/${id}`)
       .pipe(catchError(this.processHTTPMsgService.handleError));
   }
 
   getFeaturedLeader(): Observable<Leader> {
-    return this.http.get<Leader>(`${baseURL}leadership?featured=true`)
+    return this.http.get<Leader>(`${baseURL}leadership.json?featured=true`)
       .pipe(map( leaders => leaders[0]))
       .pipe(catchError(this.processHTTPMsgService.handleError));
   }

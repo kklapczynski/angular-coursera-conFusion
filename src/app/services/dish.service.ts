@@ -15,18 +15,18 @@ export class DishService {
 
   getDishes(): Observable<Dish[]> {
     // getting data from the server
-    return this.http.get<Dish[]>(`${baseURL}dishes`)
+    return this.http.get<Dish[]>(`${baseURL}dishes.json`)
       // pipe the observable returned by HttpClient method through the error handler
       .pipe(catchError(this.processHTTPMsgService.handleError));
   }
   getDish(id: number): Observable<Dish> {
     // data from server
-    return this.http.get<Dish>(`${baseURL}dishes/${id}`)
+    return this.http.get<Dish>(`${baseURL}dishes/${id}.json`)
       .pipe(catchError(this.processHTTPMsgService.handleError));
   }
   getFeaturedDish(): Observable<Dish> {
     // getting data from server
-    return this.http.get<Dish>(`${baseURL}dishes?featured=true`)
+    return this.http.get<Dish>(`${baseURL}dishes.json?featured=true`)
       .pipe(map(dishes => { return dishes[0] }))
       .pipe(catchError(this.processHTTPMsgService.handleError));
   }
@@ -45,7 +45,7 @@ export class DishService {
       })
     }
 
-    return this.http.put<Dish>(`${baseURL}dishes/${dish.id}`, dish, httpOptions)
+    return this.http.put<Dish>(`${baseURL}dishes/${dish.id}.json`, dish, httpOptions)
       .pipe(catchError(this.processHTTPMsgService.handleError));
   }
 }
