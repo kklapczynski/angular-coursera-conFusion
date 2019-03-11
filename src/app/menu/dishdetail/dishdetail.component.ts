@@ -3,7 +3,8 @@ import { DishService } from '../../services/dish.service';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
 import { Dish } from '../../shared/dish';
-import { switchMap } from 'rxjs/operators';
+import { forkJoin, of } from 'rxjs';
+import { switchMap, tap, catchError, take } from 'rxjs/operators';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { visibility, expand } from '../../animations/app.animations';
 
@@ -48,23 +49,37 @@ export class DishdetailComponent implements OnInit {
 
     ngOnInit() {
         // getting all dish ids from observable
-        this.dishService.getDishIds()
-            .subscribe(
-                ids => this.dishIds = ids,
-                error => this.errorMessage = <any>error);
-        this.route.params
-            .pipe(switchMap(
-                    (params: Params) => {
-                        this.visibility = 'hidden'; // hide current dish when new one requested from server
-                        return this.dishService.getDish(Number(params['id']));
+        // DONE: join subscriptions resolving, cause when online on first entering to dishdetail
+        // getDishIds resolves slower than getDish and error occurs
+        // TODO: modify setPrevNext() into pure function
+        const observable = forkJoin(
+            this.dishService.getDishIds(),
+            this.route.params
+                .pipe(
+                    switchMap(
+                        (params: Params) => {
+                            this.visibility = 'hidden'; // hide current dish when new one requested from server
+                            return this.dishService.getDish(Number(params['id']));
                     })
-            )
-            .subscribe(
-                dish => {this.dish = dish; this.dishCopy = dish;
-                            this.setPrevNext(this.dish.id);
-                            this.visibility = 'shown'}, // show new dish when observable resloved successfully
-                error => this.errorMessage = <any>error
-            );
+                )
+                .pipe(take(1)), // route.params is a observable that never completes (can always change),
+                                // so take(1) operator needs to be used to force resolving with current value
+        )
+        .pipe(catchError(error => of(error)));
+        observable.subscribe(
+                // ids => this.dishIds = ids,
+                // error => this.errorMessage = <any>error);
+                results => {
+                    this.dishIds = <any>results[0];
+                    this.dish = <any>results[1];
+                    this.dishCopy = <any>results[1];
+                    this.setPrevNext(this.dish.id, this.dishIds);
+                    this.visibility = 'shown'
+                },
+                error => {
+                    this.errorMessage = <any>error;
+                }
+        );
         this.createForm();
     }
 
@@ -96,14 +111,14 @@ export class DishdetailComponent implements OnInit {
     }
 
     goBack(): void {
-        // TODO: change it, so BACK button brings back to MENU, not the preavious location
+        // TODO: change it, so BACK button brings back to MENU, not the previous location
         this.location.back();
     }
     // calculating previous and next dish to use with buttons in dishdetail card
-    setPrevNext(dishId: number): void {
-        const currentIndex = this.dishIds.indexOf(dishId);
-        this.prev = this.dishIds[currentIndex === 0 ? this.dishIds.length - 1 : currentIndex - 1];
-        this.next = this.dishIds[currentIndex === this.dishIds.length - 1 ? 0 : currentIndex + 1];
+    setPrevNext(dishId: number, dishIds: number[] ): void {
+        const currentIndex = dishIds.indexOf(dishId);
+        this.prev = dishIds[currentIndex === 0 ? dishIds.length - 1 : currentIndex - 1];
+        this.next = dishIds[currentIndex === dishIds.length - 1 ? 0 : currentIndex + 1];
     }
 
     onSubmit() {
